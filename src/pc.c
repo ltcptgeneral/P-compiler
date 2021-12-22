@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 void usage(){
-	printf("Usage: pc <inputfile> <outputfile> <>\n");
+	printf("Usage: pc <inputfile> <outputfile>\n");
 }
 
 int main(int argc, char ** argv){

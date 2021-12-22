@@ -24,6 +24,8 @@ int main(int argc, char ** argv){
 	}
 	if(infile == NULL || outfile == NULL) return 1;
 
+	fprintf(outfile, "#include <stdlib.h>\n#include <stdio.h>\nint main(){\nunsigned char * ptr = (unsigned char *) calloc(256, sizeof(unsigned 2char));\nunsigned char * acc = ptr;\n");
+
 	bool success = true;
 	char c = (char) fgetc(infile);
 	unsigned long int open_brackets = 0;
@@ -32,19 +34,19 @@ int main(int argc, char ** argv){
 
 		switch (c){
 			case '>':
-				fprintf(outfile, "++ptr;\n");
+				fprintf(outfile, "++acc;\n");
 				break;
 			case '<':
-				fprintf(outfile, "--ptr;\n");
+				fprintf(outfile, "--acc;\n");
 				break;
 			case '+':
-				fprintf(outfile, "++*ptr;\n");
+				fprintf(outfile, "++*acc;\n");
 				break;
 			case '-':
-				fprintf(outfile, "--*ptr;\n");
+				fprintf(outfile, "--*acc;\n");
 				break;
 			case '[':
-				fprintf(outfile, "while(*ptr){\n");
+				fprintf(outfile, "while(*acc){\n");
 				open_brackets++;
 				break;
 			case ']':
@@ -53,10 +55,10 @@ int main(int argc, char ** argv){
 				break;
 			
 			case '!':
-				fprintf(outfile, "putchar(*ptr);\n");
+				fprintf(outfile, "putchar(*acc);\n");
 				break;
 			case '?':
-				fprintf(outfile, "*ptr = getchar();\n");
+				fprintf(outfile, "*acc = getchar();\n");
 				break;
 
 			case '\n':
@@ -87,6 +89,8 @@ int main(int argc, char ** argv){
 		fclose(outfile);
 		return 1;
 	}
+
+	fprintf(outfile, "free(ptr);\n}");
 
 	fclose(infile);
 	fclose(outfile);

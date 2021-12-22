@@ -24,7 +24,12 @@ int main(int argc, char ** argv){
 	}
 	if(infile == NULL || outfile == NULL) return 1;
 
-	fprintf(outfile, "#include <stdlib.h>\n#include <stdio.h>\nint main(){\nunsigned char * ptr = (unsigned char *) calloc(256, sizeof(unsigned 2char));\nunsigned char * acc = ptr;\n");
+	fprintf(outfile, "#include <stdlib.h>\n\
+#include <stdio.h>\n\
+int main(){\n\
+unsigned char * ptr = (unsigned char *) calloc(1, sizeof(unsigned char));\n\
+long unsigned int size = 1;\n\
+long unsigned int acc = 0;\n");
 
 	bool success = true;
 	char c = (char) fgetc(infile);
@@ -40,13 +45,13 @@ int main(int argc, char ** argv){
 				fprintf(outfile, "--acc;\n");
 				break;
 			case '+':
-				fprintf(outfile, "++*acc;\n");
+				fprintf(outfile, "++*(ptr + acc);\n");
 				break;
 			case '-':
-				fprintf(outfile, "--*acc;\n");
+				fprintf(outfile, "--*(ptr + acc);\n");
 				break;
 			case '[':
-				fprintf(outfile, "while(*acc){\n");
+				fprintf(outfile, "while(*(ptr + acc)){\n");
 				open_brackets++;
 				break;
 			case ']':
@@ -55,10 +60,27 @@ int main(int argc, char ** argv){
 				break;
 			
 			case '!':
-				fprintf(outfile, "putchar(*acc);\n");
+				fprintf(outfile, "putchar(*(ptr + acc));\n");
 				break;
 			case '?':
-				fprintf(outfile, "*acc = getchar();\n");
+				fprintf(outfile, "*(ptr + acc) = getchar();\n");
+				break;
+
+			case 'e':
+				fprintf(outfile, "unsigned long int new_size= *(ptr + acc);\n\
+unsigned char * new = (unsigned char *) calloc(new_size, sizeof(unsigned char));\n\
+for(int i = 0; i < size; i++){\n\
+*(new + i) = *(ptr + i);\n\
+}\n\
+free(ptr);\n\
+ptr = new;\n\
+size = new_size;");
+				break;
+
+			case 'r':
+				fprintf(outfile, "unsigned char r = *(ptr + acc);\n\
+free(ptr);\n\
+return r;\n");
 				break;
 
 			case '\n':
@@ -90,7 +112,10 @@ int main(int argc, char ** argv){
 		return 1;
 	}
 
-	fprintf(outfile, "free(ptr);\n}");
+	fprintf(outfile, "unsigned char r = *ptr;\n\
+free(ptr);\n\
+return r;\n\
+}");
 
 	fclose(infile);
 	fclose(outfile);

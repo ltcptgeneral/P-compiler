@@ -1,0 +1,15 @@
+{
+    "name": "TRA Analysis Development Environment",
+    "build": {
+		"dockerfile": "Dockerfile",
+    },
+    "settings": { 
+		"terminal.integrated.shell.linux": "/bin/bash",
+	},
+	"extensions": [
+		"mhutchie.git-graph",
+		"ms-vscode.cpptools",
+		"waderyan.gitblame"
+	],
+		"postCreateCommand": ""
+	}

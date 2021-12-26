@@ -67,7 +67,7 @@ long unsigned int acc = 0;\n");
 				break;
 
 			case 'e':
-				fprintf(outfile, "unsigned long int new_size= *(ptr + acc);\n\
+				fprintf(outfile, "unsigned long int new_size = *(ptr + acc) + size;\n\
 unsigned char * new = (unsigned char *) calloc(new_size, sizeof(unsigned char));\n\
 for(int i = 0; i < size; i++){\n\
 *(new + i) = *(ptr + i);\n\
